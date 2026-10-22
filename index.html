@@ -1,18 +1,305 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pausa — Recordá por qué</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === ANIMATIONS === */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInSlow {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes gridScroll {
+            from { transform: perspective(500px) rotateX(60deg) translateY(0%); }
+            to { transform: perspective(500px) rotateX(60deg) translateY(50%); }
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            25% { transform: translate(30px, -40px) scale(1.2); opacity: 0.6; }
+            50% { transform: translate(-20px, -80px) scale(0.8); opacity: 0.4; }
+            75% { transform: translate(40px, -40px) scale(1.1); opacity: 0.5; }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+            33% { transform: translate(-40px, -60px) scale(1.3); opacity: 0.5; }
+            66% { transform: translate(20px, -100px) scale(0.9); opacity: 0.3; }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            50% { transform: translate(50px, -70px) scale(1.1); opacity: 0.6; }
+        }
+
+        @keyframes pulseGlow1 {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.25; transform: scale(1.1); }
+        }
+
+        @keyframes pulseGlow2 {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.15); }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        @keyframes lineGlow {
+            0%, 100% { opacity: 0.3; box-shadow: 0 0 8px rgba(139, 92, 246, 0.3); }
+            50% { opacity: 0.6; box-shadow: 0 0 16px rgba(139, 92, 246, 0.5); }
+        }
+
+        /* === ANIMATION CLASSES === */
+        .animate-fade-in {
+            animation: fadeIn 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 0;
+        }
+
+        .animate-fade-in-slow {
+            animation: fadeInSlow 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
+            opacity: 0;
+        }
+
+        .animate-fade-in-delayed {
+            animation: fadeIn 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s forwards;
+            opacity: 0;
+        }
+
+        /* === CYBERPUNK BACKGROUND === */
+        .cyber-grid {
+            position: absolute;
+            bottom: -20%;
+            left: -50%;
+            right: -50%;
+            height: 80%;
+            width: 200%;
+            background-image:
+                linear-gradient(to right, rgba(139, 92, 246, 0.12) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(139, 92, 246, 0.12) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridScroll 12s linear infinite;
+            transform: perspective(500px) rotateX(60deg);
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .particle-1 {
+            width: 4px; height: 4px;
+            background: rgba(236, 72, 153, 0.6);
+            box-shadow: 0 0 8px rgba(236, 72, 153, 0.4);
+            top: 70%; left: 20%;
+            animation: float1 15s ease-in-out infinite;
+        }
+
+        .particle-2 {
+            width: 3px; height: 3px;
+            background: rgba(6, 182, 212, 0.6);
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+            top: 80%; left: 60%;
+            animation: float2 18s ease-in-out infinite;
+        }
+
+        .particle-3 {
+            width: 5px; height: 5px;
+            background: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+            top: 60%; left: 80%;
+            animation: float3 12s ease-in-out infinite;
+        }
+
+        .particle-4 {
+            width: 3px; height: 3px;
+            background: rgba(236, 72, 153, 0.5);
+            box-shadow: 0 0 6px rgba(236, 72, 153, 0.3);
+            top: 75%; left: 40%;
+            animation: float2 20s ease-in-out infinite 3s;
+        }
+
+        .particle-5 {
+            width: 4px; height: 4px;
+            background: rgba(6, 182, 212, 0.5);
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+            top: 85%; left: 75%;
+            animation: float1 16s ease-in-out infinite 5s;
+        }
+
+        .particle-6 {
+            width: 2px; height: 2px;
+            background: rgba(167, 139, 250, 0.6);
+            box-shadow: 0 0 6px rgba(167, 139, 250, 0.4);
+            top: 65%; left: 10%;
+            animation: float3 14s ease-in-out infinite 2s;
+        }
+
+        .glow-orb-1 {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+            animation: pulseGlow1 8s ease-in-out infinite;
+            filter: blur(40px);
+        }
+
+        .glow-orb-2 {
+            position: absolute;
+            top: 40%;
+            right: 5%;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+            animation: pulseGlow2 10s ease-in-out infinite 2s;
+            filter: blur(40px);
+        }
+
+        .glow-orb-3 {
+            position: absolute;
+            bottom: 30%;
+            left: 30%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+            animation: pulseGlow1 12s ease-in-out infinite 4s;
+            filter: blur(40px);
+        }
+
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(
+                to right,
+                transparent 0%,
+                rgba(6, 182, 212, 0.08) 20%,
+                rgba(6, 182, 212, 0.15) 50%,
+                rgba(6, 182, 212, 0.08) 80%,
+                transparent 100%
+            );
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+        }
+
+        .neon-glow-purple {
+            text-shadow:
+                0 0 10px rgba(139, 92, 246, 0.3),
+                0 0 20px rgba(139, 92, 246, 0.15),
+                0 0 40px rgba(139, 92, 246, 0.05);
+        }
+
+        .neon-glow-pink {
+            text-shadow:
+                0 0 8px rgba(236, 72, 153, 0.2),
+                0 0 16px rgba(236, 72, 153, 0.1);
+        }
+
+        .neon-line {
+            animation: lineGlow 4s ease-in-out infinite;
+        }
+
+        /* Font families */
+        .font-serif-elegant {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .font-sans-clean {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-300 h-screen overflow-hidden flex items-center justify-center antialiased relative">
+
+    <!-- === CYBERPUNK BACKGROUND LAYERS === -->
+    
+    <!-- Deep base gradient -->
+    <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, #0a0a1a 0%, #0d0d1f 50%, #12081f 100%);"></div>
+
+    <!-- Ambient glow orbs -->
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
+    <div class="glow-orb-3"></div>
+
+    <!-- Perspective grid floor -->
+    <div class="cyber-grid"></div>
+
+    <!-- Floating particles -->
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+    <div class="particle particle-6"></div>
+
+    <!-- Scanline -->
+    <div class="scanline"></div>
+
+    <!-- Vignette overlay -->
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);"></div>
+
+    <!-- === MAIN CONTENT === -->
+    <div class="relative z-10 max-w-2xl w-full text-center px-6">
+        
+        <!-- Opening line -->
+        <p class="animate-fade-in font-sans-clean text-zinc-400 text-lg md:text-xl font-light tracking-wide mb-6 neon-glow-pink">
+            Acordate del
+        </p>
+
+        <!-- Core goals — larger, bolder, serif with neon glow -->
+        <h1 class="animate-fade-in-slow font-serif-elegant text-zinc-200 text-3xl md:text-5xl font-semibold leading-tight tracking-wide mb-4 neon-glow-purple">
+            ISEN,
+        </h1>
+        <h1 class="animate-fade-in-slow font-serif-elegant text-zinc-200 text-3xl md:text-5xl font-semibold leading-tight tracking-wide mb-10 neon-glow-purple">
+            Posgrado en Europa,
+        </h1>
+
+        <!-- Connecting thought -->
+        <p class="animate-fade-in-delayed font-sans-clean text-zinc-400 text-base md:text-lg font-light tracking-wide mb-8">
+            y todo lo que querés después del título.
+        </p>
+
+        <!-- Concluding advice — softer, italic -->
+        <p class="animate-fade-in-delayed font-serif-elegant text-zinc-500 text-xl md:text-2xl italic font-normal tracking-wide neon-glow-pink">
+            Si hace falta, descansa, paciencia.
+        </p>
+
+        <!-- Neon decorative line -->
+        <div class="animate-fade-in-delayed mt-12 mx-auto w-20 h-px bg-violet-500/50 neon-line rounded-full"></div>
+        
+    </div>
+
+</body>
 </html>
